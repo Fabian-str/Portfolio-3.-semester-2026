@@ -1,0 +1,14 @@
+disabled = false
+locale = "en"
+label = "English"
+weight = 1
+title = "Fabians Portfolio 3. Semester 2026"
+
+[params]
+displayName = "EN"
+isoCode = "en"
+rtl = false
+dateFormat = "2 January 2006"
+
+["params.author"]
+name = "Fabian Strøm"
