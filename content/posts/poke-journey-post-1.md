@@ -2,6 +2,7 @@
 title: "Week 1 - Starting PokéJourney"
 date: 2026-08-31
 draft: false
+featureimage: "images/pokemon_1.webp"
 ---
 
 ## What I added

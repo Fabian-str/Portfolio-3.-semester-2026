@@ -40,9 +40,9 @@ showAppearanceSwitcher = true
 showScrollToTop = true
 
 [homepage]
-layout = "hero"
+layout = "profile"
 showRecent = true
-showRecentItems = 6
+showRecentItems = 3
 showMoreLink = true
 showMoreLinkDest = "/posts/"
 cardView = true
