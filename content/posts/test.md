@@ -1,11 +1,10 @@
 ---
-title: Test Post
-weight: 1
-date: 2026-08-24
+title: "Projekt 1"
+date: 2026-08-25
 draft: false
+summary: "Kort beskrivelse af projektet."
 ---
 
-## Dette er en test post
+## Projekt 1
 
-test test test test test test Test
-test test test test test test test
+Her kommer indholdet om projektet.
