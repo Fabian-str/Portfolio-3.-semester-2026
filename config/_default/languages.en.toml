@@ -10,9 +10,12 @@ isoCode = "en"
 rtl = false
 dateFormat = "2 January 2006"
 
-["params.author"]
+[params.author]
 name = "Fabian Strøm"
 image = "images/profile.jpeg"
-links = [{ github = "https://github.com/Fabian-str" }]
 headline = "Datamatiker – 3. semester"
 bio = "Portfolio for mit 3. semester"
+
+links = [
+  { github = "https://github.com/Fabian-str" }
+]
