@@ -1,6 +1,7 @@
 package app.config;
 
 import app.entities.Playthrough;
+import app.entities.PokemonInstance;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -63,6 +64,7 @@ public class HibernateConfig {
         );
 
         configuration.addAnnotatedClass(Playthrough.class);
+        configuration.addAnnotatedClass(PokemonInstance.class);
 
         return configuration.buildSessionFactory();
     }
