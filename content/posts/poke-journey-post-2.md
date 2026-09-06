@@ -5,21 +5,16 @@ draft: false
 featureimage: "images/pokemon_1.webp"
 ---
 
-## What I added
+This week I added `PokemonInstance` and connected it to `Playthrough` using a unidirectional `@ManyToOne` relationship.
 
-This week I continued working on PokéJourney by adding a second entity, `PokemonInstance`.
+Each Pokémon is stored as an individual instance with information such as gender, shiny status, nickname and whether it is currently owned. This makes it possible to count male, female and shiny Pokémon separately.
 
-The purpose of `PokemonInstance` is to represent an individual Pokémon that belongs to a specific playthrough. This makes it possible to track more than just whether a species has been caught or not.
+I also added a `PokemonInstanceDAO` with CRUD operations and several JPQL queries for filtering and counting Pokémon.
 
-Each Pokémon instance can currently store:
+I chose not to use cascade types yet and kept the relationship unidirectional to avoid unnecessary complexity.
 
-- PokéAPI species ID
-- nickname
-- gender
-- shiny status
-- whether the Pokémon is currently owned
-- when it was obtained
-- which playthrough it belongs to
+I also added JUnit tests for the DAO layer, and all tests are currently passing.
+
 
 I also created the domain model for the project. I did not start working on it in week 1 because I find it difficult to create useful diagrams before I have a decent overview of the project and its structure.
 
