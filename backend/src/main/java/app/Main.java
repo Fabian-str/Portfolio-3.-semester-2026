@@ -1,32 +1,85 @@
 package app;
 
-import app.concurrency.PokemonFetchLogger;
-import app.concurrency.SafeCounter;
-import app.concurrency.UnsafeCounter;
-import app.dto.PokemonDTO;
+import app.api.PlaythroughController;
+import app.api.PokemonController;
+import app.config.HibernateConfig;
+import app.dao.PlaythroughDAO;
+import app.dao.PlaythroughDAOImpl;
 import app.services.PokemonApiService;
 
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import io.javalin.Javalin;
+import io.javalin.json.JavalinJackson;
+
+import jakarta.persistence.EntityManagerFactory;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
-        SafeCounter counter = new SafeCounter();
+        // Hibernate / database
+        EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
 
-        ExecutorService executor =
-                Executors.newFixedThreadPool(8);
+        PlaythroughDAO playthroughDAO = new PlaythroughDAOImpl(emf);
 
-        for (int i = 0; i < 10000; i++) {
-            executor.submit(counter::increment);
-        }
+        // Services
+        PokemonApiService pokemonApiService = new PokemonApiService();
 
-        executor.shutdown();
-        executor.awaitTermination(5, TimeUnit.SECONDS);
+        // Controllers
+        PlaythroughController playthroughController = new PlaythroughController(playthroughDAO);
 
-        System.out.println(counter.getCount());
+        PokemonController pokemonController = new PokemonController(pokemonApiService);
+
+        // Jackson configuration
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        objectMapper.registerModule(new JavaTimeModule());
+
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        // Javalin
+        Javalin app = Javalin.create(config -> {
+            config.jsonMapper(
+                new JavalinJackson().updateMapper(mapper -> {
+                    mapper.registerModule(new JavaTimeModule());
+                    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                })
+            );
+        }).start(7071);
+
+        // Pokémon routes
+        app.get(
+            "/api/pokemon/{id}",
+            pokemonController::getPokemon
+        );
+
+        // Playthrough routes
+        app.get(
+            "/api/playthroughs",
+            playthroughController::getAll
+        );
+
+        app.get(
+            "/api/playthroughs/{id}",
+            playthroughController::getById
+        );
+
+        app.post(
+            "/api/playthroughs",
+            playthroughController::create
+        );
+
+        app.put(
+            "/api/playthroughs/{id}",
+            playthroughController::update
+        );
+
+        app.delete(
+            "/api/playthroughs/{id}",
+            playthroughController::delete
+        );
     }
 }
