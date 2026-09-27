@@ -1,4 +1,4 @@
-package app.daos;
+package app.dao;
 
 import app.entities.Gender;
 import app.entities.PokemonInstance;

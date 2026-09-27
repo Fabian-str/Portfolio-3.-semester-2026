@@ -1,0 +1,25 @@
+POST http://localhost:7071/api/playthroughs
+Content-Type: application/json
+
+{
+  "name": "My Pokémon Blue Run",
+  "game": "BLUE"
+}
+
+###
+
+PUT http://localhost:7071/api/playthroughs/44
+Content-Type: application/json
+
+{
+  "name": "Updated Pokémon Blue Run",
+  "game": "BLUE"
+}
+
+###
+
+DELETE http://localhost:7071/api/playthroughs/44
+
+###
+
+GET http://localhost:7071/api/playthroughs

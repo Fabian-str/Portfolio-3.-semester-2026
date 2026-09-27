@@ -29,11 +29,21 @@ public class PokemonApiService {
     public PokemonDTO getPokemon(int pokemonId) throws IOException, InterruptedException {
 
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create(BASE_URL + pokemonId))
-            .GET()
-            .build();
+                .uri(URI.create(BASE_URL + pokemonId))
+                .GET()
+                .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() == 404) {
+            throw new IllegalArgumentException("Pokemon not found");
+        }
+
+        if (response.statusCode() < 200 || response.statusCode() >= 300) {
+            throw new IOException(
+                    "PokéAPI returned status " + response.statusCode()
+            );
+        }
 
         PokeApiPokemonDTO apiPokemon = objectMapper.readValue(response.body(), PokeApiPokemonDTO.class);
 
