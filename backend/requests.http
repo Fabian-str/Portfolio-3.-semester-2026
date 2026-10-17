@@ -23,3 +23,18 @@ DELETE http://localhost:7071/api/playthroughs/44
 ###
 
 GET http://localhost:7071/api/playthroughs
+
+###
+
+POST http://localhost:7071/api/game-state/test
+
+###
+
+POST http://localhost:7071/api/game-state
+Content-Type: application/json
+
+{
+  "mapId": 12,
+  "partyCount": 1,
+  "speciesIds": [176]
+}
