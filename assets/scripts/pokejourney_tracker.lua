@@ -5,6 +5,43 @@ local CURRENT_MAP_ADDRESS = 0xD35E
 local frameCounter = 0
 local lastState = ""
 
+local function sendGameState(mapId, partyCount, speciesIds)
+    local client, err = socket.connect("127.0.0.1", 7071)
+
+    if not client then
+        console:log("Could not connect to backend: " .. tostring(err))
+        return
+    end
+
+    local speciesJson = ""
+
+    for i, id in ipairs(speciesIds) do
+        speciesJson = speciesJson .. id
+
+        if i < #speciesIds then
+            speciesJson = speciesJson .. ","
+        end
+    end
+
+    local body =
+        '{"mapId":' .. mapId ..
+        ',"partyCount":' .. partyCount ..
+        ',"speciesIds":[' .. speciesJson .. ']}'
+
+    local request =
+        "POST /api/game-state HTTP/1.1\r\n" ..
+        "Host: 127.0.0.1:7071\r\n" ..
+        "Content-Type: application/json\r\n" ..
+        "Content-Length: " .. #body .. "\r\n" ..
+        "Connection: close\r\n" ..
+        "\r\n" ..
+        body
+
+    client:send(request)
+
+    console:log("Sent game state: " .. body)
+end
+
 local function readParty()
     local count = emu:read8(PARTY_COUNT_ADDRESS)
     local species = {}
@@ -45,7 +82,6 @@ end
 callbacks:add("frame", function()
     frameCounter = frameCounter + 1
 
-    -- Check roughly twice per second
     if frameCounter % 30 ~= 0 then
         return
     end
@@ -61,6 +97,13 @@ callbacks:add("frame", function()
 
     if currentState ~= lastState then
         console:log(currentState)
+
+        sendGameState(
+            mapId,
+            partyCount,
+            species
+        )
+
         lastState = currentState
     end
 end)
